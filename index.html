@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Support Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <h1 class="logo">🤖 AI Support Assistant</h1>
+            <a href="/register" class="btn-register">Business Registration</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h2 class="hero-title">How can we help you today?</h2>
+            <p class="hero-subtitle">Ask questions about our products using text or voice</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <!-- Voice Button (Center) -->
+            <button id="voiceBtn" class="voice-btn" title="Click to speak">
+                <svg id="micIcon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+            </button>
+
+            <!-- Text Input -->
+            <div class="input-wrapper">
+                <textarea 
+                    id="queryInput" 
+                    class="query-input" 
+                    placeholder="Type your question here or click the microphone to speak..."
+                    rows="3"
+                ></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button id="submitBtn" class="submit-btn">
+                <span>Ask Question</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Processing your query...</p>
+        </div>
+
+        <!-- Response Section -->
+        <div id="responseSection" class="response-section" style="display: none;">
+            <!-- Confidence Score -->
+            <div id="confidenceScore" class="confidence-indicator">
+                <span class="confidence-label">Confidence:</span>
+                <div class="confidence-bar">
+                    <div id="confidenceLevel" class="confidence-fill"></div>
+                </div>
+                <span id="confidenceText" class="confidence-text">85%</span>
+            </div>
+
+            <!-- Answer Text -->
+            <div class="answer-box">
+                <h3 class="answer-title">Answer:</h3>
+                <p id="answerText" class="answer-text"></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="readAloudBtn" class="action-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                    <span>Read Aloud</span>
+                </button>
+
+                <button id="emailBtn" class="action-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span>Email Me</span>
+                </button>
+
+                <button id="newQueryBtn" class="action-btn secondary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="1 4 1 10 7 10"></polyline>
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                    <span>New Query</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Email Modal -->
+        <div id="emailModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Email Response</h3>
+                <p>Enter your email address to receive this information:</p>
+                <input type="email" id="emailInput" class="email-input" placeholder="your@email.com">
+                <button id="sendEmailBtn" class="submit-btn">Send Email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="audioPlayer" style="display: none;"></audio>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

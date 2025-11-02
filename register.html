@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Registration - AI Support</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <h1 class="logo">🤖 AI Support Assistant</h1>
+            <a href="/" class="btn-register">Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Registration Content -->
+    <div class="container">
+        <div class="registration-section">
+            <h2 class="section-title">Business Registration</h2>
+            <p class="section-subtitle">Upload your product documentation to train the AI assistant</p>
+
+            <!-- Registration Form -->
+            <form id="registrationForm" class="registration-form">
+                <!-- Company Name -->
+                <div class="form-group">
+                    <label for="companyName">Company Name</label>
+                    <input 
+                        type="text" 
+                        id="companyName" 
+                        name="company_name" 
+                        class="form-input" 
+                        placeholder="Enter your company name"
+                        required
+                    >
+                </div>
+
+                <!-- Product Name -->
+                <div class="form-group">
+                    <label for="productName">Product Name (Optional)</label>
+                    <input 
+                        type="text" 
+                        id="productName" 
+                        name="product_name" 
+                        class="form-input" 
+                        placeholder="Enter product name"
+                    >
+                </div>
+
+                <!-- File Upload -->
+                <div class="form-group">
+                    <label for="pdfUpload">Product Documentation (PDF)</label>
+                    <div class="file-upload-wrapper">
+                        <input 
+                            type="file" 
+                            id="pdfUpload" 
+                            name="pdf" 
+                            accept=".pdf"
+                            class="file-input"
+                            required
+                        >
+                        <label for="pdfUpload" class="file-label">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span id="fileName">Choose PDF file</span>
+                        </label>
+                    </div>
+                    <p class="form-help">Maximum file size: 16MB</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="uploadBtn" class="submit-btn large">
+                    <span>Upload & Process</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- Progress Indicator -->
+            <div id="progressSection" class="progress-section" style="display: none;">
+                <h3>Processing...</h3>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p id="progressText" class="progress-text">Uploading file...</p>
+                
+                <div class="process-steps">
+                    <div class="step" id="step1">
+                        <span class="step-icon">📤</span>
+                        <span class="step-text">Uploading PDF</span>
+                    </div>
+                    <div class="step" id="step2">
+                        <span class="step-icon">📄</span>
+                        <span class="step-text">Extracting Text (OCR)</span>
+                    </div>
+                    <div class="step" id="step3">
+                        <span class="step-icon">🧠</span>
+                        <span class="step-text">Creating Embeddings</span>
+                    </div>
+                    <div class="step" id="step4">
+                        <span class="step-icon">💾</span>
+                        <span class="step-text">Storing in Vector DB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <h3>Upload Successful!</h3>
+                <p id="successText">Your product documentation has been processed and is now available for queries.</p>
+                <button id="backHomeBtn" class="submit-btn">Back to Home</button>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                <h3>Upload Failed</h3>
+                <p id="errorText">An error occurred during processing.</p>
+                <button id="retryBtn" class="submit-btn secondary">Try Again</button>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>How it works:</h3>
+                <ol class="info-list">
+                    <li><strong>Upload:</strong> Submit your product documentation in PDF format</li>
+                    <li><strong>OCR Processing:</strong> We extract text from your PDF using advanced OCR</li>
+                    <li><strong>AI Training:</strong> Content is converted into embeddings for semantic search</li>
+                    <li><strong>Vector Storage:</strong> Embeddings are stored in our vector database</li>
+                    <li><strong>Ready!</strong> Customers can now query your product information instantly</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>📋 Supported Formats:</h4>
+                    <p>PDF files up to 16MB containing product manuals, guides, FAQs, and technical documentation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+</body>
+</html>
