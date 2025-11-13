@@ -3,11 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Product Support Assistant</title>
+    <title>AI Product Support Assistant - Voice RAG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Fixed Header -->
+    <header>
+        <div class="container">
+            <div class="logo">🤖 AI Support Assistant</div>
+            <a href="/register" class="btn btn-secondary">Business Registration</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Section 1: Hero (Light Mode) -->
+        <section class="hero section-light">
+            <div class="orb-container">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+            </div>
+            <div class="container hero-content">
+                <h1>Don't type, just speak.</h1>
+                <p>Our AI uses advanced RAG to instantly query your documents. Ask questions about our products using text or voice.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Core Interaction (Pinned, Dark Mode) -->
+        <section class="core-section section-dark">
+            <!-- Background Ticker Layer -->
+            <div class="text-ticker-bg">
+                <div class="ticker-track">
+                    <span>Summarize Q3 report...</span>
+                    <span>Compare file A & B...</span>
+                    <span>Extract key metrics...</span>
+                    <span>Find contract terms...</span>
+                    <span>What's the budget breakdown?...</span>
+                    <span>List all action items...</span>
+                    <span>Summarize Q3 report...</span>
+                    <span>Compare file A & B...</span>
+                    <span>Extract key metrics...</span>
+                    <span>Find contract terms...</span>
+                </div>
+            </div>
+
+            <!-- Mid Layer: Glow Orbs -->
+            <div class="glow-orbs-container">
+                <div class="orb orb-glow-1"></div>
+                <div class="orb orb-glow-2"></div>
+            </div>
+
+            <!-- Front Layer: Main UI -->
+            <div class="container core-content">
+                <h2>Ask your data anything.</h2>
+                <div class="input-container">
+                    <input type="text" id="queryInput" placeholder="Type your question here or click the microphone..." aria-label="Query input">
+                    <button id="mic-icon" aria-label="Voice input toggle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" fill="currentColor"/>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <button id="submitBtn" class="submit-btn" style="margin-top: 1rem;">
+                    <span>Ask Question</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 3: Features (Light Mode) -->
+        <section class="features-section section-light">
+            <div class="container">
+                <h2>Faster than typing. Smarter than search.</h2>
+                <p>Manual document review is slow. Our system reads and <em>reasons</em> with your content.</p>
+            </div>
+        </section>
+
+        <!-- Section 4: CTA (Dark Mode) -->
+        <section class="cta-section section-dark">
+            <div class="container">
+                <h2 class="cta-heading">Get started.</h2>
+                <p>Upload your first document and start asking questions.</p>
+                <a href="/register" class="btn btn-primary">Upload Your Doc</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing your query...</p>
+    </div>
+
+    <!-- Response Section -->
+    <div id="responseSection" class="response-section" style="display: none;">
+        <div id="confidenceScore" class="confidence-indicator">
+            <span class="confidence-label">Confidence:</span>
+            <div class="confidence-bar">
+                <div id="confidenceLevel" class="confidence-fill"></div>
+            </div>
+            <span id="confidenceText" class="confidence-text">85%</span>
+        </div>
+        <div class="answer-box">
+            <h3 class="answer-title">Answer:</h3>
+            <p id="answerText" class="answer-text"></p>
+        </div>
+        <div class="action-buttons">
+            <button id="readAloudBtn" class="action-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+                <span>Read Aloud</span>
+            </button>
+            <button id="emailBtn" class="action-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span>Email Me</span>
+            </button>
+            <button id="newQueryBtn" class="action-btn secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                </svg>
+                <span>New Query</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div id="emailModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Email Response</h3>
+            <p>Enter your email address to receive this information:</p>
+            <input type="email" id="emailInput" class="email-input" placeholder="your@email.com">
+            <button id="sendEmailBtn" class="submit-btn">Send Email</button>
+        </div>
+    </div>
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="audioPlayer" style="display: none;"></audio>
+
+    <!-- GSAP Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Support Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+
+    
+    <title>RAG PDF Query & AI Orchestration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    
     <nav class="navbar">
         <div class="nav-content">
             <h1 class="logo">🤖 AI Support Assistant</h1>
@@ -15,17 +208,17 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
+  
     <div class="container">
-        <!-- Hero Section -->
+        
         <div class="hero-section">
             <h2 class="hero-title">How can we help you today?</h2>
             <p class="hero-subtitle">Ask questions about our products using text or voice</p>
         </div>
 
-        <!-- Input Section -->
+        
         <div class="input-section">
-            <!-- Voice Button (Center) -->
+            
             <button id="voiceBtn" class="voice-btn" title="Click to speak">
                 <svg id="micIcon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
@@ -35,7 +228,7 @@
                 </svg>
             </button>
 
-            <!-- Text Input -->
+          
             <div class="input-wrapper">
                 <textarea 
                     id="queryInput" 
@@ -45,7 +238,7 @@
                 ></textarea>
             </div>
 
-            <!-- Submit Button -->
+            
             <button id="submitBtn" class="submit-btn">
                 <span>Ask Question</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -55,15 +248,15 @@
             </button>
         </div>
 
-        <!-- Loading Indicator -->
+       
         <div id="loadingIndicator" class="loading" style="display: none;">
             <div class="spinner"></div>
             <p>Processing your query...</p>
         </div>
 
-        <!-- Response Section -->
+        
         <div id="responseSection" class="response-section" style="display: none;">
-            <!-- Confidence Score -->
+            
             <div id="confidenceScore" class="confidence-indicator">
                 <span class="confidence-label">Confidence:</span>
                 <div class="confidence-bar">
@@ -72,13 +265,13 @@
                 <span id="confidenceText" class="confidence-text">85%</span>
             </div>
 
-            <!-- Answer Text -->
+            
             <div class="answer-box">
                 <h3 class="answer-title">Answer:</h3>
                 <p id="answerText" class="answer-text"></p>
             </div>
 
-            <!-- Action Buttons -->
+          
             <div class="action-buttons">
                 <button id="readAloudBtn" class="action-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -106,7 +299,7 @@
             </div>
         </div>
 
-        <!-- Email Modal -->
+        
         <div id="emailModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <span class="close-modal">&times;</span>
@@ -118,9 +311,187 @@
         </div>
     </div>
 
-    <!-- Audio Player (Hidden) -->
+
     <audio id="audioPlayer" style="display: none;"></audio>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+
+
+
+
+
+
+
+
+
+    <header>
+        <div class="container">
+            <div class="logo">RAG AI</div>
+            <a href="{{ url_for('input_page') }}" class="btn btn-secondary">Upload Documents</a>
+        </div>
+    </header>
+
+    <main>
+        
+        <section class="hero section-light">
+            <div class="orb-container">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+            </div>
+            <div class="container hero-content">
+                <h1>Don't type, just speak.</h1>
+                <p>Our AI uses advanced RAG to instantly query your documents. Stop searching, start conversing.</p>
+                <h2><bold>↓ Scroll down ↓</bold></h2>
+            </div>
+        </section>
+
+       
+        <section class="core-section section-dark">
+            <div class="text-ticker-bg">
+                <div class="ticker-track">
+                    <span>Summarize the Q3 revenue report...</span>
+                    <span>What were the key findings in the market analysis?</span>
+                    <span>Compare the conclusions of report A and report B...</span>
+                    <span>Who is the primary technical contact for Project Phoenix?</span>
+                    <span>Extract all action items from the last meeting notes...</span>
+                    
+                    <span>Summarize the Q3 revenue report...</span>
+                    <span>What were the key findings in the market analysis?</span>
+                    <span>Compare the conclusions of report A and report B...</span>
+                    <span>Who is the primary technical contact for Project Phoenix?</span>
+                    <span>Extract all action items from the last meeting notes...</span>
+                </div>
+            </div>
+            <div class="glow-orbs-container">
+                <div class="orb orb-glow-1"></div>
+                <div class="orb orb-glow-2"></div>
+            </div>
+            <div class="container core-content">
+                <h2>Ask about product so we can retrieve.</h2>
+                <div class="input-container">
+                    <input type="text" placeholder="Or type your query here..." aria-label="Query Input">
+                    <button id="mic-icon" aria-label="Activate Voice Query">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="features-section section-dark">
+            <div class="container" style="color: black ;">
+                <h2>Faster than typing. Smarter than search.</h2>
+                <p>Manual document review is slow. Our system reads and <em>reasons</em> with your content. This is full AI orchestration, not just keyword matching.</p>
+            </div>
+        </section>
+
+        <section class="cta-section section-dark">
+            <div class="container">
+                <h2 class="cta-heading">Get started.</h2>
+                <p>Upload a document to begin your first query.</p>
+                <a href="{{ url_for('input_page') }}" class="btn btn-primary">Upload Your Doc</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
+
+-->
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG PDF Query & AI Orchestration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">RAG AI</div>
+            <a href="{{ url_for('input_page') }}" class="btn btn-secondary">Upload Documents</a>
+        </div>
+    </header>
+
+    <main>
+        
+        <section class="hero section-light">
+            <div class="orb-container">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+            </div>
+            <div class="container hero-content">
+                <h1>Don't type, just speak.</h1>
+                <p>Our AI uses advanced RAG to instantly query your documents. Stop searching, start conversing.</p>
+                <h2><bold>↓ Scroll down ↓</bold></h2>
+            </div>
+        </section>
+
+       
+        <section class="core-section section-dark">
+            <div class="text-ticker-bg">
+                <div class="ticker-track">
+                    <span>Summarize the Q3 revenue report...</span>
+                    <span>What were the key findings in the market analysis?</span>
+                    <span>Compare the conclusions of report A and report B...</span>
+                    <span>Who is the primary technical contact for Project Phoenix?</span>
+                    <span>Extract all action items from the last meeting notes...</span>
+                    
+                    <span>Summarize the Q3 revenue report...</span>
+                    <span>What were the key findings in the market analysis?</span>
+                    <span>Compare the conclusions of report A and report B...</span>
+                    <span>Who is the primary technical contact for Project Phoenix?</span>
+                    <span>Extract all action items from the last meeting notes...</span>
+                </div>
+            </div>
+            <div class="glow-orbs-container">
+                <div class="orb orb-glow-1"></div>
+                <div class="orb orb-glow-2"></div>
+            </div>
+            <div class="container core-content">
+                <h2>Ask about product so we can retrieve.</h2>
+                <div class="input-container">
+                    <input type="text" placeholder="Or type your query here..." aria-label="Query Input">
+                    <button id="mic-icon" aria-label="Activate Voice Query">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="features-section section-dark">
+            <div class="container" style="color: black ;">
+                <h2>Faster than typing. Smarter than search.</h2>
+                <p>Manual document review is slow. Our system reads and <em>reasons</em> with your content. This is full AI orchestration, not just keyword matching.</p>
+            </div>
+        </section>
+
+        <section class="cta-section section-dark">
+            <div class="container">
+                <h2 class="cta-heading">Get started.</h2>
+                <p>Upload a document to begin your first query.</p>
+                <a href="{{ url_for('input_page') }}" class="btn btn-primary">Upload Your Doc</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+
+-->
